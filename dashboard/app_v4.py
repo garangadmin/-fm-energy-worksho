@@ -64,15 +64,29 @@ LLM_FIXED_PROMPT = "Give me a summary of the energy usage for METER_02 for the p
 # .env loader (no python-dotenv dependency)
 # ---------------------------------------------------------------------------
 def load_env(path: str) -> dict[str, str]:
-    """Parse a simple .env file into a dict."""
+    """Parse a simple .env file into a dict.
+
+    On Streamlit Community Cloud there is no ``.env`` on disk (it is
+    gitignored), so secrets are read from ``st.secrets`` instead — configure
+    them in the app's Settings → Secrets panel.  Locally the ``.env`` file is
+    used and ``st.secrets`` is never touched.
+    """
     env: dict[str, str] = {}
-    with open(path, "r", encoding="utf-8") as fh:
-        for line in fh:
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
-            key, _, value = line.partition("=")
-            env[key.strip()] = value.strip().strip('"').strip("'")
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                key, _, value = line.partition("=")
+                env[key.strip()] = value.strip().strip('"').strip("'")
+    else:
+        # No .env file on disk → pull from Streamlit secrets (Community Cloud).
+        for key in ("DATABASE_URL", "OPENAI_API_KEY", "OPENAI_MODEL"):
+            try:
+                env[key] = str(st.secrets[key])
+            except Exception:
+                pass
     return env
 
 

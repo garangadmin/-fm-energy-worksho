@@ -1,0 +1,10 @@
+# Pinned to the versions verified working in the local 'vibe' venv.
+# Streamlit Community Cloud installs dependencies from this file (repo root).
+streamlit==1.67.0
+pandas==3.1.1
+plotly==7.1.0
+requests==2.34.2
+joblib==1.6.0
+scikit-learn==1.9.1
+numpy==2.5.4
+scipy==1.18.1
