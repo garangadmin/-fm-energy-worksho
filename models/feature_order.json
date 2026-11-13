@@ -1,0 +1,9 @@
+[
+  "hour",
+  "dayofweek",
+  "lag_1",
+  "lag_2",
+  "lag_3",
+  "lag_24",
+  "lag_168"
+]
